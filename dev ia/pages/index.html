@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SENAI-GPT</title>
+    <link rel="stylesheet" href="../style/style.css" />
+</head>
+
+<body>
+    <div class="container">
+
+        <aside class="sidebar"></aside>
+
+        <main class="main-content">
+            <section class="center-section">
+
+                <!-- Robô -->
+                <div class="robot-container">
+                    <img src="../img/robo.png" class="robot-image" alt="Robô" />
+                </div>
+
+                <h1 class="main-title">SENAI-GPT</h1>
+
+                <!-- CHAT (começa escondido) -->
+                <div id="chatBox" class="chat-box hidden"></div>
+
+                <!-- INPUT -->
+                <div class="input-section">
+                    <form id="chatForm" class="input-form">
+                        <div class="input-wrapper">
+                            <input type="text" id="userInput" class="input-field" placeholder="Pergunte algo..." required />
+                            <button type="submit" class="send-btn">🎤</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Logo flutuante abaixo do input -->
+                <div class="floating-logo">
+                    <img src="../img/senai_logo.png" alt="logo do senai" />
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <script src="../scrpts/sc.js"></script>
+</body>
+
+</html>
