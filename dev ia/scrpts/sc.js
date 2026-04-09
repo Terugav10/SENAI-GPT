@@ -3,7 +3,7 @@ const input = document.getElementById("userInput");
 const chatBox = document.getElementById("chatBox");
 
 // ⚠️ coloque sua chave aqui (e depois remova do front em produção)
-const API_KEY = "CHAVE API GPT";
+const API_KEY = "Chat gpt audio";
 
 let started = false;
 
@@ -28,6 +28,7 @@ form.addEventListener("submit", async (e) => {
     }
 
     addMsg(pergunta, "user");
+    const loadingMsg = addMsg("Carregando...", "bot");
     input.value = "";
 
     try {
@@ -46,10 +47,39 @@ form.addEventListener("submit", async (e) => {
         const data = await res.json();
         const resposta = data.output?.[0]?.content?.[0]?.text || "Erro";
 
-        addMsg(resposta, "bot");
+        // Não adicionar o texto da resposta, apenas gerar TTS
+        try {
+            const ttsRes = await fetch("https://api.openai.com/v1/audio/speech", {
+                method: "POST",
+                headers: {
+                    "Authorization": "Bearer " + API_KEY,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "tts-1",
+                    input: resposta,
+                    voice: "alloy"
+                })
+            });
+
+            if (ttsRes.ok) {
+                const audioBlob = await ttsRes.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
+                audio.play();
+                // Remover mensagem de carregando após iniciar o áudio
+                loadingMsg.remove();
+            } else {
+                console.error("Erro no TTS:", ttsRes.statusText);
+                loadingMsg.textContent = "Erro no áudio";
+            }
+        } catch (ttsErr) {
+            console.error("Erro ao gerar TTS:", ttsErr);
+            loadingMsg.textContent = "Erro ao gerar áudio";
+        }
 
     } catch (err) {
-        addMsg("Erro na requisição", "bot");
+        loadingMsg.textContent = "Erro na requisição";
         console.error(err);
     }
 });
